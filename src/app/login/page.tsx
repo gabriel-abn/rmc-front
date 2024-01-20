@@ -29,8 +29,10 @@ export default function Login() {
       return res.accessToken;
     });
 
-    console.log(res);
-    localStorage.setItem("accessToken", res);
+    if (res) {
+      localStorage.setItem("accessToken", res);
+      window.location.href = "/feed";
+    }
   }
 
   return (
