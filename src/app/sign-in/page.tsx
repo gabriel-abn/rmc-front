@@ -17,13 +17,23 @@ import { signIn } from "./fetch";
 
 export default function SignIn() {
   const signInSchema = z.object({
-    email: z.string().email(),
+    username: z
+      .string()
+      .min(3, { message: "Username must have between 3 and 32 characters" })
+      .max(32, { message: "Username must have between 3 and 32 characters" }),
+    email: z.string().email({ message: "Invalid email" }),
     password: z.string().min(8),
     instructor: z.boolean(),
   });
 
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+      instructor: false,
+    },
   });
 
   async function onSubmit(data: z.infer<typeof signInSchema>) {
@@ -36,13 +46,14 @@ export default function SignIn() {
     const res = await signIn({
       email: data.email,
       password: data.password,
+      username: data.username,
       role,
     }).then((res) => {
       return res.accessToken;
     });
 
-    console.log(res);
-    localStorage.setItem("accessToken", res);
+    sessionStorage.setItem("accessToken", res);
+    window.location.href = "/verify-email";
   }
 
   return (
@@ -52,6 +63,19 @@ export default function SignIn() {
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-4 bg-green-950 rounded-md p-4 w-96"
         >
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-white">Username</FormLabel>
+                <FormControl>
+                  <Input placeholder="my-user-name" {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
           <FormField
             control={form.control}
             name="email"
@@ -86,6 +110,7 @@ export default function SignIn() {
                 <FormControl>
                   <>
                     <Switch
+                      defaultChecked={field.value}
                       checked={field.value}
                       onCheckedChange={field.onChange}
                     />

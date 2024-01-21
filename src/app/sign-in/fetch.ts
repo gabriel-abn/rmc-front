@@ -4,14 +4,18 @@ export const signIn = async (params: {
   email: string;
   password: string;
   role: string;
+  username: string;
 }): Promise<{ accessToken: string }> => {
   try {
-    const { email, password, role } = params;
+    const { email, password, role, username } = params;
 
+    console.log(params);
     const response = await fetch({
       url: "/account/sign-in",
-      data: { email, password, role },
+      data: { email, password, role, username },
     }).POST();
+
+    console.log(response);
 
     return {
       accessToken: response.accessToken,

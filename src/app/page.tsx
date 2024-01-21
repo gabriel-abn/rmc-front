@@ -7,8 +7,15 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  let accessToken: string = "";
 
-  const accessToken = localStorage.getItem("accessToken");
+  try {
+    if (typeof window !== "undefined") {
+      accessToken = sessionStorage.getItem("accessToken") as string;
+    }
+  } catch (error) {
+    console.error(error);
+  }
 
   if (accessToken) {
     window.location.href = "/feed";

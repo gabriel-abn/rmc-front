@@ -12,27 +12,37 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { login } from "./fetch";
+import { verifyEmail } from "./fetch";
 
-export default function Login() {
-  const loginSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(8),
+const verifyEmailSchema = z.object({
+  email: z.string().email({ message: "Invalid email" }),
+  code: z
+    .string()
+    .min(8, { message: "Invalid verification code." })
+    .max(8, { message: "Invalid verification code." })
+    .toUpperCase(),
+});
+
+export default function VerifyEmail() {
+  if (!sessionStorage.getItem("accessToken")) {
+    window.location.href = "/";
+  }
+
+  const form = useForm<z.infer<typeof verifyEmailSchema>>({
+    resolver: zodResolver(verifyEmailSchema),
   });
 
-  const form = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(loginSchema),
-  });
-
-  async function onSubmit(data: z.infer<typeof loginSchema>) {
-    const res = await login(data).then((res) => {
-      return res.accessToken;
+  async function onSubmit(data: z.infer<typeof verifyEmailSchema>) {
+    await verifyEmail({
+      email: data.email,
+      code: data.code,
+    }).then(({ isVerified, message }) => {
+      console.log(isVerified, message);
+      if (isVerified || message === "EMAIL_ALREADY_VERIFIED") {
+        window.location.href = "/feed";
+        return;
+      }
     });
-
-    if (res) {
-      sessionStorage.setItem("accessToken", res);
-      window.location.href = "/feed";
-    }
   }
 
   return (
@@ -47,9 +57,9 @@ export default function Login() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel className="text-white">Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="exemple@domain.com" {...field} />
+                  <Input {...field} />
                 </FormControl>
               </FormItem>
             )}
@@ -57,19 +67,19 @@ export default function Login() {
 
           <FormField
             control={form.control}
-            name="password"
+            name="code"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel className="text-white">Code</FormLabel>
                 <FormControl>
-                  <Input placeholder="********" type="password" {...field} />
+                  <Input {...field} />
                 </FormControl>
               </FormItem>
             )}
           />
 
           <Button type="submit" className="w-full">
-            Login
+            Verify account
           </Button>
         </form>
       </Form>

@@ -9,6 +9,7 @@ type User = {
   profile: Profile;
   email: string;
   password: string;
+  username: string;
   emailVerified: boolean;
   role: string;
   roleId?: string;
