@@ -34,16 +34,16 @@ export default function FeedPage() {
         />
         <div className="flex flex-row justify-between mt-1">
           <Button className="w-full mr-1">
-            <Link href="/my-posts">My Posts</Link>
+            <Link href="/pages/my-posts">My Posts</Link>
           </Button>
 
           <Button className="w-full ml-1">
-            <Link href="/my-feedbacks">My Feedbacks</Link>
+            <Link href="/pages/my-feedbacks">My Feedbacks</Link>
           </Button>
         </div>
 
         <Button className="w-full mt-1">
-          <Link href="/make-post">Make Post</Link>
+          <Link href="/pages/make-post">Make Post</Link>
         </Button>
       </div>
 
@@ -70,7 +70,7 @@ export default function FeedPage() {
             <TrendingTopic
               key={index}
               description={faker.lorem.sentence()}
-              link={"https://www.google.com/search?q=" + tag.replace("-", "+")}
+              link="/pages/trending-posts"
               title={tag}
             />
           ))}
