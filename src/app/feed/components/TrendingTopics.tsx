@@ -14,6 +14,7 @@ export default function TrendingTopic(props: {
       <a
         href={props.link}
         className="text-sm font-extrabold text-white hover:underline"
+        target="_blank"
       >
         {props.title}
       </a>

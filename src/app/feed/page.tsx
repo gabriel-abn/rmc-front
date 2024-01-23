@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { faker } from "@faker-js/faker";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Post } from "./components/Post";
 import ProfileBadge from "./components/ProfileBadge";
@@ -32,9 +33,18 @@ export default function FeedPage() {
           feedbacksCount={feed.user.feedbacks}
         />
         <div className="flex flex-row justify-between mt-1">
-          <Button className="w-full mr-1">Edit Profile</Button>
-          <Button className="w-full ml-1">Make Post</Button>
+          <Button className="w-full mr-1">
+            <Link href="/my-posts">My Posts</Link>
+          </Button>
+
+          <Button className="w-full ml-1">
+            <Link href="/my-feedbacks">My Feedbacks</Link>
+          </Button>
         </div>
+
+        <Button className="w-full mt-1">
+          <Link href="/make-post">Make Post</Link>
+        </Button>
       </div>
 
       <ScrollArea className="w-1/2 space-y-2 h-144 rounded-lg bg-slate-400 p-4">
@@ -60,7 +70,7 @@ export default function FeedPage() {
             <TrendingTopic
               key={index}
               description={faker.lorem.sentence()}
-              link={faker.internet.url()}
+              link={"https://www.google.com/search?q=" + tag.replace("-", "+")}
               title={tag}
             />
           ))}
