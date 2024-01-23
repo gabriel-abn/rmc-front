@@ -1,42 +1,52 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { faker } from "@faker-js/faker";
+import { useEffect, useState } from "react";
 import { Post } from "./components/Post";
 import ProfileBadge from "./components/ProfileBadge";
-import TrendingTopics from "./components/TrendingTopics";
-
-const posts = Array.from({ length: 10 }).map((_, index) => ({
-  username: faker.internet.userName(),
-  avatarUrl: faker.internet.avatar(),
-  post: faker.lorem.paragraph(),
-  averageRating: Math.floor(Math.random() * 5) + 1,
-  feedbackCount: Math.floor(Math.random() * 100) + 1,
-  tags: Array.from({ length: Math.floor(Math.random() * 5) + 1 }).map(() => {
-    return faker.lorem.word();
-  }),
-}));
+import TrendingTopic from "./components/TrendingTopics";
+import { FeedData, fetchFeed } from "./fetch";
 
 export default function FeedPage() {
-  return (
+  const [feed, setFeed] = useState<FeedData>(undefined!);
+  let token = sessionStorage.getItem("accessToken")!;
+
+  useEffect(() => {
+    if (!token) return;
+
+    fetchFeed(token).then((res) => {
+      setFeed(res);
+      console.log(res);
+    });
+  }, [token]);
+
+  return feed ? (
     <div className="flex flex-row justify-between p-5 space-x-4">
       <div className="w-1/4">
         <ProfileBadge
-          username={faker.internet.userName()}
-          avatarUrl={faker.internet.avatar()}
-          averageRating={Math.floor(Math.random() * 5) + 1}
-          feedbacksCount={Math.floor(Math.random() * 100) + 1}
+          username={feed.user.username}
+          avatarUrl={feed.user.avatar}
+          averageRating={feed.user.rating}
+          feedbacksCount={feed.user.feedbacks}
         />
+        <div className="flex flex-row justify-between mt-1">
+          <Button className="w-full mr-1">Edit Profile</Button>
+          <Button className="w-full ml-1">Make Post</Button>
+        </div>
       </div>
 
       <ScrollArea className="w-1/2 space-y-2 h-144 rounded-lg bg-slate-400 p-4">
         <div className="space-y-2">
-          {posts.map((post, index) => (
+          {feed.posts.map(({ author, post }, index) => (
             <Post
               key={index}
-              username={post.username}
-              avatarUrl={post.avatarUrl}
-              post={post.post}
-              averageRating={post.averageRating}
-              feedbackCount={post.feedbackCount}
+              username={author.username}
+              avatarUrl={author.avatar}
+              post={post.content}
+              averageRating={123}
+              feedbackCount={post.feedbacks}
               tags={post.tags}
             />
           ))}
@@ -44,8 +54,20 @@ export default function FeedPage() {
       </ScrollArea>
 
       <div className="w-1/4">
-        <TrendingTopics />
+        <div className="flex flex-col space-y-2 p-4 bg-slate-500 rounded-lg">
+          <h3 className="text-lg font-bold">Trending Topics</h3>
+          {feed.tags.map((tag, index) => (
+            <TrendingTopic
+              key={index}
+              description={faker.lorem.sentence()}
+              link={faker.internet.url()}
+              title={tag}
+            />
+          ))}
+        </div>
       </div>
     </div>
+  ) : (
+    <div>Loading...</div>
   );
 }

@@ -48,8 +48,8 @@ export const Post = (props: PostProps) => {
         <div className="space-x-1">
           {props.tags.map((tag, index) => {
             return (
-              <Badge key={index} className="mt-2">
-                {tag}
+              <Badge key={index} className="mt-2" variant="secondary">
+                {"#" + tag}
               </Badge>
             );
           })}

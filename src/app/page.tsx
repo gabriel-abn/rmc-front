@@ -22,12 +22,12 @@ export default function Home() {
   }
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
+    const savedTheme = sessionStorage.getItem("theme");
     setIsDarkMode(savedTheme === "dark");
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("theme", isDarkMode ? "dark" : "light");
+    sessionStorage.setItem("theme", isDarkMode ? "dark" : "light");
     document.cookie = `isDarkMode=${isDarkMode}`;
   }, [isDarkMode]);
 

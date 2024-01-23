@@ -5,7 +5,7 @@ export default function fetch(params: {
   data?: any;
   headers?: any;
 }) {
-  const baseURL = "http://192.168.15.5:3333/api";
+  const baseURL = "http://localhost:3333/api";
 
   const { url, data, headers } = params;
 
@@ -19,13 +19,11 @@ export default function fetch(params: {
 
   return {
     GET: async () => {
-      if (data) {
-        try {
-          const response = await axios.get(`${baseURL}${url}`, options);
-          return response.data;
-        } catch (error) {
-          throw error;
-        }
+      try {
+        const response = await axios.get(`${baseURL}${url}`, options);
+        return response.data;
+      } catch (error) {
+        throw error;
       }
     },
 
