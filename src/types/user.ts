@@ -13,4 +13,7 @@ type User = {
   emailVerified: boolean;
   role: string;
   roleId?: string;
+  tags: string[];
 };
+
+export type { Profile, User };

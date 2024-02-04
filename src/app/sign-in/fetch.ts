@@ -12,7 +12,13 @@ export const signIn = async (params: {
     console.log(params);
     const response = await fetch({
       url: "/account/sign-in",
-      data: { email, password, role, username },
+      data: {
+        email,
+        password,
+        role,
+        username,
+        tags: ["javascript", "aws", "docker"],
+      },
     }).POST();
 
     console.log(response);

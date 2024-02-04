@@ -5,6 +5,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { faker } from "@faker-js/faker";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { MakePost } from "./components/MakePost";
 import { Post } from "./components/Post";
 import ProfileBadge from "./components/ProfileBadge";
 import TrendingTopic from "./components/TrendingTopics";
@@ -19,6 +20,7 @@ export default function FeedPage() {
 
     fetchFeed(token).then((res) => {
       setFeed(res);
+      localStorage.setItem("username", res.user.username);
       console.log(res);
     });
   }, [token]);
@@ -32,7 +34,7 @@ export default function FeedPage() {
           averageRating={feed.user.rating}
           feedbacksCount={feed.user.feedbacks}
         />
-        <div className="flex flex-row justify-between mt-1">
+        <div className="flex flex-row justify-between mt-1 mb-1">
           <Button className="w-full mr-1">
             <Link href="/pages/my-posts">My Posts</Link>
           </Button>
@@ -42,9 +44,9 @@ export default function FeedPage() {
           </Button>
         </div>
 
-        <Button className="w-full mt-1">
-          <Link href="/pages/make-post">Make Post</Link>
-        </Button>
+        <div className="w-full">
+          <MakePost />
+        </div>
       </div>
 
       <ScrollArea className="w-1/2 space-y-2 h-144 rounded-lg bg-slate-400 p-4">

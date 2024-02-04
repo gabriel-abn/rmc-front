@@ -37,23 +37,27 @@ export default function SignIn() {
   });
 
   async function onSubmit(data: z.infer<typeof signInSchema>) {
-    let role = "DEVELOPER";
+    try {
+      let role = "DEVELOPER";
 
-    if (data.instructor) {
-      role = "INSTRUCTOR";
+      if (data.instructor) {
+        role = "INSTRUCTOR";
+      }
+
+      const res = await signIn({
+        email: data.email,
+        password: data.password,
+        username: data.username,
+        role,
+      }).then((res) => {
+        return res.accessToken;
+      });
+
+      sessionStorage.setItem("accessToken", res);
+      window.location.href = "/verify-email";
+    } catch (error) {
+      console.log(error);
     }
-
-    const res = await signIn({
-      email: data.email,
-      password: data.password,
-      username: data.username,
-      role,
-    }).then((res) => {
-      return res.accessToken;
-    });
-
-    sessionStorage.setItem("accessToken", res);
-    window.location.href = "/verify-email";
   }
 
   return (

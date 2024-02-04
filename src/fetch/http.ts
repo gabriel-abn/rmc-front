@@ -40,7 +40,7 @@ export default function fetch(params: {
               console.log(res.data);
             })
             .catch((err) => {
-              console.log(err.response.data);
+              console.log(err);
               return err.response.data;
             });
 
