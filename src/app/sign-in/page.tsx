@@ -24,6 +24,7 @@ export default function SignIn() {
     email: z.string().email({ message: "Invalid email" }),
     password: z.string().min(8),
     instructor: z.boolean(),
+    tags: z.string().transform((val) => val.replace(" ", "").split(",")),
   });
 
   const form = useForm<z.infer<typeof signInSchema>>({
@@ -49,6 +50,7 @@ export default function SignIn() {
         password: data.password,
         username: data.username,
         role,
+        tags: data.tags,
       }).then((res) => {
         return res.accessToken;
       });
@@ -127,6 +129,18 @@ export default function SignIn() {
             )}
           />
 
+          <FormField
+            control={form.control}
+            name="tags"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-white">Tags</FormLabel>
+                <FormControl>
+                  <Input placeholder="java,aws,cloud..." {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
           <Button type="submit" className="w-full">
             Sign In
           </Button>

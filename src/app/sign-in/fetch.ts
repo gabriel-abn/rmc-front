@@ -5,9 +5,10 @@ export const signIn = async (params: {
   password: string;
   role: string;
   username: string;
+  tags: string[];
 }): Promise<{ accessToken: string }> => {
   try {
-    const { email, password, role, username } = params;
+    const { email, password, role, username, tags } = params;
 
     console.log(params);
     const response = await fetch({
@@ -17,7 +18,7 @@ export const signIn = async (params: {
         password,
         role,
         username,
-        tags: ["javascript", "aws", "docker"],
+        tags,
       },
     }).POST();
 
